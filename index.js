@@ -8,6 +8,9 @@ app.use('/blog',routes_blog)
 app.use(express.json());
 
 
+const routes_user=require("./routes/user_api");
+app.use("/user",routes_user)
+
 
 //connect to Mongo db 
 const mongoose = require('mongoose');

@@ -15,7 +15,7 @@ router.post("/addBlog",async (req,res)=>{
           descreption:req.body.descreption,
           categorie:req.body.categorie,
           ref:req.body.ref,
-          author:req.body.author
+          id_author:req.body.id_author
         })
         console.log("Blog",blog);
 
@@ -45,9 +45,7 @@ router.put("/updateBlog/:id",async (req,res)=>{
         const updatedData = req.body;
         const options = { new: true };
 
-        const result = await Blog.findByIdAndUpdate(
-            id, updatedData, options
-        )
+        const result = await Blog.findByIdAndUpdate(id, updatedData, options)
 
         res.send(result)
 
@@ -91,18 +89,51 @@ router.get('/getOneBlog/:id', async (req, res) => {
 
 
 
+//get blogs of specif users 
+async function getBlogsByAuthor(authorId) {
+    try {
+      // Find blogs where id_author matches the specified authorId
+      const blogs = await Blog.find({ id_author: authorId }).toArray();
+      return blogs;
+    } catch (err) {
+      console.error('Error occurred while connecting to MongoDB:', err);
+    } 
+  }
+
+router.get("/getAuthorBlogs/:id",async(req,res)=>{
+        const authorIdToFind = req.params.id;
+        const blogs = await Blog.find({ id_author: authorIdToFind });
+        console.log("blogs off ",blogs)
+        res.status(200).send(blogs)
+   
+})
 
 
 
+// retourner les blogs d'un personnes spécifique 
+router.get("/getUserBlogs/:id",async(req,res)=>{
+    try{
+
+        const idUser=req.params.id; // extraction de l'id de user 
+        const blogUser = await Blog.find({id_author:idUser});
+        res.status(200).send(blogUser);
+    
+    }catch(err){
+        res.status(500).send({msg:err})
+    }
+})
 
 
-
-
-
-
-
-
-
+// retourner les blogs selon une catégorie
+router.get("/getBlogCategorie/:categ",async(req,res)=>{
+    try{
+        const category=req.params.categ; // extraction de l'id de user 
+        const blogCategory = await Blog.find({categorie:category});
+        res.status(200).send(blogCategory);
+    }catch(err){
+        res.status(500).send({msg:err})
+    }    
+})
 
 
 

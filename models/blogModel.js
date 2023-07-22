@@ -21,7 +21,7 @@ const blogSchema = new mongoose.Schema({
         required:true,
         type :Number
     },
-    author:{
+    id_author:{
         required:true,
         type :String
     }
